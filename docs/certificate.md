@@ -33,6 +33,12 @@ spec:
   isCA: true
 ```
 
+```bash
+kubectl apply -f certificate.yml
+kubectl get certificate root-ca-cert
+kubectl get secret root-ca-cert
+```
+
 Intermediate CA certificate:
 
 ```
@@ -44,6 +50,11 @@ spec:
   isCA: true
   caRef:
     name: root-ca-cert
+```
+
+```bash
+kubectl apply -f certificate.yml
+kubectl get certificate inter-ca-cert
 ```
 
 Leaf certificate:
@@ -58,6 +69,12 @@ spec:
     name: root-ca-cert
   alternativeNames:
   - app1.svc.cluster.local
+```
+
+```bash
+kubectl apply -f certificate.yml
+kubectl get certificate inter-ca-cert
+kubectl get secret inter-ca-cert -o jsonpath='{.data.crt\.pem}' | base64 -d | openssl x509 -noout -subject -issuer
 ```
 
 Leaf certificate with custom secret projection:
@@ -76,4 +93,9 @@ spec:
     stringData:
       crt: $(certificate)
       key: $(privateKey)
+```
+
+```bash
+kubectl apply -f certificate.yml
+kubectl get secret inter-ca-cert -o jsonpath='{.data.crt}' | base64 -d | openssl x509 -noout -subject
 ```

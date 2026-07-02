@@ -72,6 +72,13 @@ spec:
 
 ```
 
+```bash
+kubectl apply -f secret-export.yml
+kubectl get secretexport user-password -n user1
+kubectl get secretimport user-password -n user2
+kubectl get secret user-password -n user2
+```
+
 Above configuration results in a `user-password` Secret created within `user2` namespace:
 
 ```
@@ -153,6 +160,11 @@ data:
   .dockerconfigjson: e30K
 ```
 
+```bash
+kubectl apply -f placeholder-secret.yml
+kubectl get secret reg-creds
+```
+
 Above secret could be referenced within a Pod, Deployment, ServiceAccount, etc. and would be automatically filled in by secretgen-controller at runtime, making it possible for image fetch to succeed.
 
 The below diagram shows a single secret being exported into two placeholder
@@ -225,4 +237,10 @@ metadata:
 type: kubernetes.io/dockerconfigjson
 data:
   .dockerconfigjson: e30K # <-- will be filled with combination of registry-com-creds + global-reg-creds
+```
+
+```bash
+kubectl apply -f image-pull-secrets.yml
+kubectl get secretexport -n user1
+kubectl get secret my-reg-creds -n user2
 ```

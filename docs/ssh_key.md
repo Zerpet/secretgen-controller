@@ -22,3 +22,9 @@ metadata:
   name: ssh-key
 spec: {}
 ```
+
+```bash
+kubectl apply -f ssh-key.yml
+kubectl get sshkey ssh-key
+kubectl get secret ssh-key
+```

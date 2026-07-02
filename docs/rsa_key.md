@@ -22,3 +22,9 @@ metadata:
   name: rsa-key
 spec: {}
 ```
+
+```bash
+kubectl apply -f rsa-key.yml
+kubectl get rsakey rsa-key
+kubectl get secret rsa-key
+```
