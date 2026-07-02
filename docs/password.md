@@ -31,8 +31,8 @@ spec:
 ```
 
 ```bash
-kubectl apply -f password.yml
-kubectl get password long-user-password
+sgctl password create long-user-password --length 124
+sgctl password describe long-user-password
 kubectl get secret long-user-password -o jsonpath='{.data.password}' | base64 -d
 ```
 
@@ -53,6 +53,7 @@ spec:
 
 ```bash
 kubectl apply -f password.yml
+sgctl password describe long-user-password
 kubectl get secret long-user-password -o jsonpath='{.data.postgresql-password}' | base64 -d
 ```
 
@@ -72,8 +73,8 @@ spec:
 ```
 
 ```bash
-kubectl apply -f password.yml
-kubectl get password custom-user-password
+sgctl password create custom-user-password --length 27 --digits 2 --uppercase 4 --lowercase 10 --symbols 3
+sgctl password describe custom-user-password
 ```
 
 With only symbols and specific symbol charset specification:
@@ -90,6 +91,6 @@ spec:
 ```
 
 ```bash
-kubectl apply -f password.yml
+sgctl password create only-symbols-user-password --length 7 --symbols 7 --symbol-charset "!$#%"
 kubectl get secret only-symbols-user-password -o jsonpath='{.data.password}' | base64 -d
 ```

@@ -73,9 +73,16 @@ spec:
 ```
 
 ```bash
-kubectl apply -f secret-export.yml
-kubectl get secretexport user-password -n user1
-kubectl get secretimport user-password -n user2
+kubectl create namespace user1
+kubectl create namespace user2
+kubectl create namespace user3
+kubectl annotate namespace user3 field.cattle.io/projectId=cluster1:project1 --overwrite
+sgctl -n user1 password create user-password --length 32
+sgctl -n user1 secret-export create user-password --to-namespace user2 --to-selector '[{"key":"metadata.annotations['\''field.cattle.io/projectId'\'']","operator":"In","values":["cluster1:project1"]}]'
+sgctl -n user2 secret-import create user-password --from-namespace user1
+sgctl -n user3 secret-import create user-password --from-namespace user1
+sgctl -n user1 secret-export describe user-password
+sgctl -n user2 secret-import describe user-password
 kubectl get secret user-password -n user2
 ```
 
@@ -241,6 +248,6 @@ data:
 
 ```bash
 kubectl apply -f image-pull-secrets.yml
-kubectl get secretexport -n user1
+sgctl -n user1 secret-export list
 kubectl get secret my-reg-creds -n user2
 ```

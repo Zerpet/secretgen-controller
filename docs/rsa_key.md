@@ -24,7 +24,7 @@ spec: {}
 ```
 
 ```bash
-kubectl apply -f rsa-key.yml
-kubectl get rsakey rsa-key
-kubectl get secret rsa-key
+sgctl rsa-key create my-rsa-key
+sgctl rsa-key describe my-rsa-key
+kubectl get secret my-rsa-key
 ```

@@ -24,7 +24,7 @@ spec: {}
 ```
 
 ```bash
-kubectl apply -f ssh-key.yml
-kubectl get sshkey ssh-key
-kubectl get secret ssh-key
+sgctl ssh-key create deploy-key
+sgctl ssh-key describe deploy-key
+kubectl get secret deploy-key
 ```

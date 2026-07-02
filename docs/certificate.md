@@ -34,9 +34,8 @@ spec:
 ```
 
 ```bash
-kubectl apply -f certificate.yml
-kubectl get certificate root-ca-cert
-kubectl get secret root-ca-cert
+sgctl certificate create root-ca-cert --is-ca --common-name my-root-ca
+sgctl certificate describe root-ca-cert
 ```
 
 Intermediate CA certificate:
@@ -54,7 +53,7 @@ spec:
 
 ```bash
 kubectl apply -f certificate.yml
-kubectl get certificate inter-ca-cert
+sgctl certificate describe inter-ca-cert
 ```
 
 Leaf certificate:
@@ -72,9 +71,9 @@ spec:
 ```
 
 ```bash
-kubectl apply -f certificate.yml
-kubectl get certificate inter-ca-cert
-kubectl get secret inter-ca-cert -o jsonpath='{.data.crt\.pem}' | base64 -d | openssl x509 -noout -subject -issuer
+sgctl certificate create app-tls --ca-ref root-ca-cert --alternative-names app1.svc.cluster.local
+sgctl certificate describe app-tls
+kubectl get secret app-tls -o jsonpath='{.data.crt\.pem}' | base64 -d | openssl x509 -noout -subject -issuer
 ```
 
 Leaf certificate with custom secret projection:
@@ -97,5 +96,6 @@ spec:
 
 ```bash
 kubectl apply -f certificate.yml
-kubectl get secret inter-ca-cert -o jsonpath='{.data.crt}' | base64 -d | openssl x509 -noout -subject
+sgctl certificate describe app-tls
+kubectl get secret app-tls -o jsonpath='{.data.crt}' | base64 -d | openssl x509 -noout -subject
 ```

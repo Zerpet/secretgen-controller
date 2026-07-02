@@ -55,7 +55,7 @@ spec:
 
 ```bash
 kubectl apply -f secret-template.yml
-kubectl get secrettemplate new-secret
+sgctl secret-template describe new-secret
 kubectl get secret new-secret -o yaml
 ```
 
@@ -175,7 +175,7 @@ subjects:
 
 ```bash
 kubectl apply -f secret-template-helm.yml
-kubectl get secrettemplate helm-postgres
+sgctl secret-template describe helm-postgres
 kubectl get secret helm-postgres -o yaml
 ```
 
