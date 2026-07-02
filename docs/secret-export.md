@@ -78,12 +78,34 @@ kubectl create namespace user2
 kubectl create namespace user3
 kubectl annotate namespace user3 field.cattle.io/projectId=cluster1:project1 --overwrite
 sgctl -n user1 password create user-password --length 32
-sgctl -n user1 secret-export create user-password --to-namespace user2 --to-selector '[{"key":"metadata.annotations['\''field.cattle.io/projectId'\'']","operator":"In","values":["cluster1:project1"]}]'
+# Export to specific namespace
+sgctl -n user1 secret-export create user-password --to-namespace user2
 sgctl -n user2 secret-import create user-password --from-namespace user1
+# For the selector-based export to user3, use YAML (see below)
 sgctl -n user3 secret-import create user-password --from-namespace user1
 sgctl -n user1 secret-export describe user-password
 sgctl -n user2 secret-import describe user-password
 kubectl get secret user-password -n user2
+```
+
+For namespace selector-based exports, use YAML with sgctl:
+
+```yaml
+apiVersion: secretgen.carvel.dev/v1alpha1
+kind: SecretExport
+metadata:
+  name: user-password
+  namespace: user1
+spec:
+  dangerousToNamespacesSelector:
+  - key: "metadata.annotations['field.cattle.io/projectId']"
+    operator: In
+    values:
+    - cluster1:project1
+```
+
+```bash
+kubectl apply -f secret-export-selector.yml
 ```
 
 Above configuration results in a `user-password` Secret created within `user2` namespace:
