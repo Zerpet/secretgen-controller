@@ -8,6 +8,6 @@ fi
 
 set -u
 
-go test ./pkg/... -test.v $@
+go test ./pkg/... ./internal/... -test.v $@
 
 echo UNIT SUCCESS

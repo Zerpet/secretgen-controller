@@ -53,6 +53,12 @@ spec:
       username: $(.username-secret.data.username)
 ```
 
+```bash
+kubectl apply -f secret-template.yml
+sgctl secret-template describe new-secret
+kubectl get secret new-secret -o yaml
+```
+
 Above configuration results in a `new-secret` Secret created within `default` namespace:
 
 ```console
@@ -165,6 +171,12 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: helm-reader
+```
+
+```bash
+kubectl apply -f secret-template-helm.yml
+sgctl secret-template describe helm-postgres
+kubectl get secret helm-postgres -o yaml
 ```
 
 Above configuration results in a `helm-postgres` Secret created within `default` namespace:

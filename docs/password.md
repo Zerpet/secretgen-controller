@@ -30,6 +30,12 @@ spec:
   length: 124
 ```
 
+```bash
+sgctl password create long-user-password --length 124
+sgctl password describe long-user-password
+kubectl get secret long-user-password -o jsonpath='{.data.password}' | base64 -d
+```
+
 With custom secret projection:
 
 ```yaml
@@ -43,6 +49,12 @@ spec:
     type: Opaque
     stringData:
       postgresql-password: $(value)
+```
+
+```bash
+kubectl apply -f password.yml
+sgctl password describe long-user-password
+kubectl get secret long-user-password -o jsonpath='{.data.postgresql-password}' | base64 -d
 ```
 
 With custom specification:
@@ -60,6 +72,11 @@ spec:
   symbols: 3  
 ```
 
+```bash
+sgctl password create custom-user-password --length 27 --digits 2 --uppercase 4 --lowercase 10 --symbols 3
+sgctl password describe custom-user-password
+```
+
 With only symbols and specific symbol charset specification:
 
 ```yaml
@@ -71,4 +88,9 @@ spec:
   length: 7
   symbols: 7  
   symbolCharSet: "!$#%"
+```
+
+```bash
+sgctl password create only-symbols-user-password --length 7 --symbols 7 --symbol-charset "!$#%"
+kubectl get secret only-symbols-user-password -o jsonpath='{.data.password}' | base64 -d
 ```

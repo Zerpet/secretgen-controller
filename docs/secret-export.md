@@ -72,6 +72,42 @@ spec:
 
 ```
 
+```bash
+kubectl create namespace user1
+kubectl create namespace user2
+kubectl create namespace user3
+kubectl annotate namespace user3 field.cattle.io/projectId=cluster1:project1 --overwrite
+sgctl -n user1 password create user-password --length 32
+# Export to specific namespace
+sgctl -n user1 secret-export create user-password --to-namespace user2
+sgctl -n user2 secret-import create user-password --from-namespace user1
+# For the selector-based export to user3, use YAML (see below)
+sgctl -n user3 secret-import create user-password --from-namespace user1
+sgctl -n user1 secret-export describe user-password
+sgctl -n user2 secret-import describe user-password
+kubectl get secret user-password -n user2
+```
+
+For namespace selector-based exports, use YAML with sgctl:
+
+```yaml
+apiVersion: secretgen.carvel.dev/v1alpha1
+kind: SecretExport
+metadata:
+  name: user-password
+  namespace: user1
+spec:
+  dangerousToNamespacesSelector:
+  - key: "metadata.annotations['field.cattle.io/projectId']"
+    operator: In
+    values:
+    - cluster1:project1
+```
+
+```bash
+kubectl apply -f secret-export-selector.yml
+```
+
 Above configuration results in a `user-password` Secret created within `user2` namespace:
 
 ```
@@ -153,6 +189,11 @@ data:
   .dockerconfigjson: e30K
 ```
 
+```bash
+kubectl apply -f placeholder-secret.yml
+kubectl get secret reg-creds
+```
+
 Above secret could be referenced within a Pod, Deployment, ServiceAccount, etc. and would be automatically filled in by secretgen-controller at runtime, making it possible for image fetch to succeed.
 
 The below diagram shows a single secret being exported into two placeholder
@@ -225,4 +266,10 @@ metadata:
 type: kubernetes.io/dockerconfigjson
 data:
   .dockerconfigjson: e30K # <-- will be filled with combination of registry-com-creds + global-reg-creds
+```
+
+```bash
+kubectl apply -f image-pull-secrets.yml
+sgctl -n user1 secret-export list
+kubectl get secret my-reg-creds -n user2
 ```

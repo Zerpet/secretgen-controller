@@ -22,3 +22,9 @@ metadata:
   name: ssh-key
 spec: {}
 ```
+
+```bash
+sgctl ssh-key create deploy-key
+sgctl ssh-key describe deploy-key
+kubectl get secret deploy-key
+```

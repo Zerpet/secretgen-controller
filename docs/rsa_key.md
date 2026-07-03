@@ -22,3 +22,9 @@ metadata:
   name: rsa-key
 spec: {}
 ```
+
+```bash
+sgctl rsa-key create my-rsa-key
+sgctl rsa-key describe my-rsa-key
+kubectl get secret my-rsa-key
+```
