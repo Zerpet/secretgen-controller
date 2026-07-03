@@ -2,6 +2,7 @@
 
 - [Install](install.md)
 - [Walkthrough](walkthrough.md)
+- [sgctl CLI Reference](cli.md) - Command-line interface reference for all sgctl commands and subcommands
 - Secret types
   - [Certificate (CAs and leafs)](certificate.md)
   - [Password](password.md)
